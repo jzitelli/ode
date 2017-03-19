@@ -40,10 +40,9 @@ if __name__ == "__main__":
         # output the body's position and velocity
         x, y, z = body.getPosition()
         u, v, w = body.getLinearVel()
-        print "%1.2fsec: pos=(%6.3f, %6.3f, %6.3f)  vel=(%6.3f, %6.3f, %6.3f)" % \
-            (total_time, x, y, z, u, v, w)
+        print("%1.2fsec: pos=(%6.3f, %6.3f, %6.3f)  vel=(%6.3f, %6.3f, %6.3f)" % \
+            (total_time, x, y, z, u, v, w))
 
         # advance the simulation
         world.step(TIME_STEP)
         total_time += TIME_STEP
-
