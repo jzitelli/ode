@@ -185,7 +185,7 @@ width = 640
 height = 480
 glutInitWindowPosition (x, y);
 glutInitWindowSize (width, height);
-glutCreateWindow ("testode")
+glutCreateWindow (b"testode")
 
 # Create a world object
 world = ode.World()
@@ -281,4 +281,3 @@ def _idlefunc ():
 glutIdleFunc (_idlefunc)
 
 glutMainLoop ()
-
