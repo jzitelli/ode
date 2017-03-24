@@ -23,25 +23,7 @@ except (OSError, CalledProcessError):
     print("Failed to find ODE with 'pkg-config'. Please make sure "
           "that it is installed and available on your system path.")
 
-    extra_link_args = None
-    logpath = os.path.join(os.path.pardir, os.path.pardir, 'build', 'vs2010', 'obj',
-                           'Release', 'ode.tlog', 'link.command.1.tlog')
-    try:
-        with open(logpath) as f:
-            extra_link_args = f.read()
-    except IOError as err:
-        print('''couldn't open compile log file "%s"''' % logpath)
-        print("""
-             **********
-    ******************************
-    ********** REASON ************
-    ******************************
-             **********
-%s
-""" % err)
-    ode_ext = Extension("ode", ["ode.pyx"],
-                        # extra_compile_args=r"""/I..\..\include /D NDEBUG /D dNODEBUG /D dIDEDOUBLE /D CCD_IDEDOUBLE /D WIN32""")
-                        extra_link_args=extra_link_args)
+    ode_ext = Extension("ode", ["ode.pyx"])
 
 
 if __name__ == "__main__":
