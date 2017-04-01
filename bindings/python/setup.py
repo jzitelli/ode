@@ -24,14 +24,20 @@ except (OSError, CalledProcessError):
 
 ODE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
 
-extra_compile_args = r"""/I..\..\include /D NDEBUG /D dNODEBUG /D dIDEDOUBLE /D CCD_IDEDOUBLE /D WIN32"""
+#extra_compile_args = r"""/I..\..\include /D NDEBUG /D dNODEBUG /D dIDEDOUBLE /D CCD_IDEDOUBLE /D WIN32"""
+extra_compile_args = """--define NDEBUG --define dNODEBUG --define dIDEDOUBLE --define CCD_IDEDOUBLE --define WIN32"""
 #extra_compile_args = r"/W3 /WX- /O2 /Oy /GL /D _MT /D NDEBUG /D dNODEBUG /D dIDEDOUBLE /D CCD_IDEDOUBLE /D WIN32 /D _CRT_SECURE_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /D _USE_MATH_DEFINES /D _OU_NAMESPACE=odeou /D _OU_FEATURE_SET=_OU_FEATURE_SET_ATOMICS /D ODE_LIB /D ODE_DLL /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline"
 #extra_compile_args = r"/D NDEBUG /D dNODEBUG /D dIDEDOUBLE /D CCD_IDEDOUBLE /D WIN32 /D ODE_LIB /D _WINDLL /D _MBCS"
 #extra_compile_args = r"/D _USE_MATH_DEFINES /D _OU_NAMESPACE=odeou /D _OU_FEATURE_SET=_OU_FEATURE_SET_ATOMICS /D ODE_LIB /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline"
 #extra_compile_args = r'''/fp:precise /D "_MT" /D "NDEBUG" /D "dNODEBUG" /D "dIDESINGLE" /D "CCD_IDESINGLE" /D "WIN32" /D "_CRT_SECURE_NO_DEPRECATE" /D "_SCL_SECURE_NO_WARNINGS" /D "_USE_MATH_DEFINES" /D "_OU_NAMESPACE=odeou" /D "_OU_FEATURE_SET=_OU_FEATURE_SET_ATOMICS" /D "ODE_LIB" /D "_MBCS"'''
 
 ode_ext = Extension("ode", ["ode.pyx"],
-                    extra_compile_args=extra_compile_args,
+                    define_macros=[('NDEBUG', '1'),
+                                   ('dNODEBUG', '1'),
+                                   ('dIDEDOUBLE', '1'),
+                                   ('CCD_IDEDOUBLE', '1'),
+                                   ('WIN32', '1')],
+                    #extra_compile_args=extra_compile_args,
                     include_dirs=[os.path.join(ODE_DIR, 'include')],
                     library_dirs=[os.path.join(ODE_DIR, 'lib', 'Release')],
                     libraries=['ode'])

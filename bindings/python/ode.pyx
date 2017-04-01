@@ -158,7 +158,7 @@ cdef class Mass:
 
     def setSphere(self, density, radius):
         """setSphere(density, radius)
-        
+
         Set the mass parameters to represent a sphere of the given radius
         and density, with the center of mass at (0,0,0) relative to the body.
 
@@ -171,7 +171,7 @@ cdef class Mass:
 
     def setSphereTotal(self, total_mass, radius):
         """setSphereTotal(total_mass, radius)
-        
+
         Set the mass parameters to represent a sphere of the given radius
         and mass, with the center of mass at (0,0,0) relative to the body.
 
@@ -229,7 +229,7 @@ cdef class Mass:
 
     def setCylinder(self, density, direction, r, h):
         """setCylinder(density, direction, r, h)
-        
+
         Set the mass parameters to represent a flat-ended cylinder of
         the given parameters and density, with the center of mass at
         (0,0,0) relative to the body. The radius of the cylinder is r.
@@ -250,7 +250,7 @@ cdef class Mass:
 
     def setCylinderTotal(self, total_mass, direction, r, h):
         """setCylinderTotal(total_mass, direction, r, h)
-        
+
         Set the mass parameters to represent a flat-ended cylinder of
         the given parameters and mass, with the center of mass at
         (0,0,0) relative to the body. The radius of the cylinder is r.
@@ -415,7 +415,7 @@ cdef class Contact:
     This wrapper class provides methods to get and set the items of those
     structures.
     """
-    
+
     cdef dContact _contact
 
     def __cinit__(self):
@@ -438,7 +438,7 @@ cdef class Contact:
 
         Set the contact flags. The argument m is a combination of the
         ContactXyz flags (ContactMu2, ContactBounce, ...).
- 
+
         @param flags: Contact flags
         @type flags: int
         """
@@ -674,7 +674,7 @@ cdef class Contact:
         where pos and normal are 3-tuples of floats and depth is a single
         float. geom1 and geom2 are the Geom objects of the geoms in contact.
         """
-        cdef long id1, id2
+        cdef long long id1, id2
 
         pos = (self._contact.geom.pos[0],
                self._contact.geom.pos[1],
@@ -684,8 +684,8 @@ cdef class Contact:
                   self._contact.geom.normal[2])
         depth = self._contact.geom.depth
 
-        id1 = <long>self._contact.geom.g1
-        id2 = <long>self._contact.geom.g2
+        id1 = <long long>self._contact.geom.g1
+        id2 = <long long>self._contact.geom.g2
         g1 = _geom_c2py_lut[id1]
         g2 = _geom_c2py_lut[id2]
         return pos, normal, depth, g1, g2
@@ -693,7 +693,7 @@ cdef class Contact:
     # setContactGeomParams
     def setContactGeomParams(self, pos, normal, depth, g1=None, g2=None):
         """setContactGeomParams(pos, normal, depth, geom1=None, geom2=None)
-        
+
         Set the ContactGeom structure of the contact.
 
         @param pos:  Contact position, in global coordinates
@@ -708,7 +708,7 @@ cdef class Contact:
         @type geom2: Geom
         """
 
-        cdef long id
+        cdef long long id
 
         self._contact.geom.pos[0] = pos[0]
         self._contact.geom.pos[1] = pos[1]
@@ -722,7 +722,7 @@ cdef class Contact:
             self._contact.geom.g1 = <dGeomID>id
         else:
             self._contact.geom.g1 = <dGeomID>0
-            
+
         if g2 != None:
             id = g2._id()
             self._contact.geom.g2 = <dGeomID>id
@@ -733,12 +733,12 @@ cdef class Contact:
 # World
 cdef class World:
     """Dynamics world.
-    
+
     The world object is a container for rigid bodies and joints.
-    
-    
+
+
     Constructor::
-    
+
       World()
     """
 
@@ -840,7 +840,7 @@ cdef class World:
     # quickStep
     def quickStep(self, stepsize):
         """quickStep(stepsize)
-        
+
         Step the world. This uses an iterative method that takes time
         on the order of O(m*N) and memory on the order of O(m), where m is
         the total number of constraint rows and N is the number of
@@ -857,7 +857,7 @@ cdef class World:
     # setQuickStepNumIterations
     def setQuickStepNumIterations(self, num):
         """setQuickStepNumIterations(num)
-        
+
         Set the number of iterations that the QuickStep method
         performs per step. More iterations will give a more accurate
         solution, but will take longer to compute. The default is 20
@@ -866,13 +866,13 @@ cdef class World:
         @param num: Number of iterations
         @type num: int
         """
-        
+
         dWorldSetQuickStepNumIterations(self.wid, num)
 
     # getQuickStepNumIterations
     def getQuickStepNumIterations(self):
         """getQuickStepNumIterations() -> int
-        
+
         Get the number of iterations that the QuickStep method
         performs per step. More iterations will give a more accurate
         solution, but will take longer to compute. The default is 20
@@ -938,18 +938,18 @@ cdef class World:
     # setAutoDisableFlag
     def setAutoDisableFlag(self, flag):
         """setAutoDisableFlag(flag)
-        
+
         Set the default auto-disable flag for newly created bodies.
 
         @param flag: True = Do auto disable
         @type flag: bool
         """
         dWorldSetAutoDisableFlag(self.wid, flag)
-        
+
     # getAutoDisableFlag
     def getAutoDisableFlag(self):
         """getAutoDisableFlag() -> bool
-        
+
         Get the default auto-disable flag for newly created bodies.
         """
         return dWorldGetAutoDisableFlag(self.wid)
@@ -957,7 +957,7 @@ cdef class World:
     # setAutoDisableLinearThreshold
     def setAutoDisableLinearThreshold(self, threshold):
         """setAutoDisableLinearThreshold(threshold)
-        
+
         Set the default auto-disable linear threshold for newly created
         bodies.
 
@@ -969,7 +969,7 @@ cdef class World:
     # getAutoDisableLinearThreshold
     def getAutoDisableLinearThreshold(self):
         """getAutoDisableLinearThreshold() -> float
-        
+
         Get the default auto-disable linear threshold for newly created
         bodies.
         """
@@ -978,7 +978,7 @@ cdef class World:
     # setAutoDisableAngularThreshold
     def setAutoDisableAngularThreshold(self, threshold):
         """setAutoDisableAngularThreshold(threshold)
-        
+
         Set the default auto-disable angular threshold for newly created
         bodies.
 
@@ -990,16 +990,16 @@ cdef class World:
     # getAutoDisableAngularThreshold
     def getAutoDisableAngularThreshold(self):
         """getAutoDisableAngularThreshold() -> float
-        
+
         Get the default auto-disable angular threshold for newly created
         bodies.
         """
         return dWorldGetAutoDisableAngularThreshold(self.wid)
-    
+
     # setAutoDisableSteps
     def setAutoDisableSteps(self, steps):
         """setAutoDisableSteps(steps)
-        
+
         Set the default auto-disable steps for newly created bodies.
 
         @param steps: Auto disable steps
@@ -1010,7 +1010,7 @@ cdef class World:
     # getAutoDisableSteps
     def getAutoDisableSteps(self):
         """getAutoDisableSteps() -> int
-        
+
         Get the default auto-disable steps for newly created bodies.
         """
         return dWorldGetAutoDisableSteps(self.wid)
@@ -1018,7 +1018,7 @@ cdef class World:
     # setAutoDisableTime
     def setAutoDisableTime(self, time):
         """setAutoDisableTime(time)
-        
+
         Set the default auto-disable time for newly created bodies.
 
         @param time: Auto disable time
@@ -1029,7 +1029,7 @@ cdef class World:
     # getAutoDisableTime
     def getAutoDisableTime(self):
         """getAutoDisableTime() -> float
-        
+
         Get the default auto-disable time for newly created bodies.
         """
         return dWorldGetAutoDisableTime(self.wid)
@@ -1139,7 +1139,7 @@ cdef class Body:
     # A reference to the world so that the world won't be destroyed while
     # there are still joints using it.
     cdef object world
-    
+
     # A dictionary with user attributes
     # (set via __getattr__ and __setattr__)
     cdef object userattribs
@@ -1165,7 +1165,7 @@ cdef class Body:
             return self.userattribs[name]
         except:
             raise AttributeError("Body object has no attribute '%s'" % name)
-            
+
     def __setattr__(self, name, value):
         self.userattribs[name] = value
 
@@ -1306,7 +1306,7 @@ cdef class Body:
         # The "const" in the original return value is cast away
         p = <dReal*>dBodyGetAngularVel(self.bid)
         return p[0], p[1], p[2]
-    
+
     # setMass
     def setMass(self, Mass mass):
         """setMass(mass)
@@ -1574,7 +1574,7 @@ cdef class Body:
         Manually enable a body.
         """
         dBodyEnable(self.bid)
-        
+
     # Disable
     def disable(self):
         """disable()
@@ -1584,7 +1584,7 @@ cdef class Body:
         at the next simulation step.
         """
         dBodyDisable(self.bid)
-        
+
     # isEnabled
     def isEnabled(self):
         """isEnabled() -> bool
@@ -1592,20 +1592,20 @@ cdef class Body:
         Check if a body is currently enabled.
         """
         return dBodyIsEnabled(self.bid)
-        
+
     # setFiniteRotationMode
     def setFiniteRotationMode(self, mode):
         """setFiniteRotationMode(mode)
 
         This function controls the way a body's orientation is updated at
         each time step. The mode argument can be:
-        
+
          - 0: An "infinitesimal" orientation update is used. This is
            fast to compute, but it can occasionally cause inaccuracies
            for bodies that are rotating at high speed, especially when
            those bodies are joined to other bodies. This is the default
            for every new body that is created.
-        
+
          - 1: A "finite" orientation update is used. This is more
            costly to compute, but will be more accurate for high speed
            rotations. Note however that high speed rotations can result
@@ -1616,7 +1616,7 @@ cdef class Body:
         @type mode: int
         """
         dBodySetFiniteRotationMode(self.bid, mode)
-        
+
     # getFiniteRotationMode
     def getFiniteRotationMode(self):
         """getFiniteRotationMode() -> mode (0/1)
@@ -1633,7 +1633,7 @@ cdef class Body:
         Set the finite rotation axis of the body.  This axis only has a
         meaning when the finite rotation mode is set
         (see setFiniteRotationMode()).
-        
+
         @param a: Axis
         @type a: 3-sequence of floats
         """
@@ -1649,7 +1649,7 @@ cdef class Body:
         # The "const" in the original return value is cast away
         dBodyGetFiniteRotationAxis(self.bid, p)
         return p[0], p[1], p[2]
-        
+
     # getNumJoints
     def getNumJoints(self):
         """getNumJoints() -> int
@@ -1670,7 +1670,7 @@ cdef class Body:
         @type mode: bool
         """
         dBodySetGravityMode(self.bid, mode)
-        
+
     # getGravityMode
     def getGravityMode(self):
         """getGravityMode() -> bool
@@ -1693,7 +1693,7 @@ cdef class Body:
         Set the kinematic state of the body (change it into a kinematic body)
 
         Kinematic bodies behave as if they had infinite mass. This means they don't react
-        to any force (gravity, constraints or user-supplied); they simply follow 
+        to any force (gravity, constraints or user-supplied); they simply follow
         velocity to reach the next position. [from ODE wiki]
 
         """
@@ -1730,7 +1730,7 @@ cdef class JointGroup:
     """Joint group.
 
     Constructor::
-    
+
       JointGroup()
     """
 
@@ -1820,7 +1820,7 @@ cdef class Joint:
             return self.userattribs[name]
         except:
             raise AttributeError("Joint object has no attribute '%s'" % name)
-            
+
     def __setattr__(self, name, value):
         self.userattribs[name] = value
 
@@ -1876,7 +1876,7 @@ cdef class Joint:
 
         Attach the joint to some new bodies. A body can be attached
         to the environment by passing None as second body.
-        
+
         @param body1: First body
         @param body2: Second body
         @type body1: Body
@@ -1888,7 +1888,7 @@ cdef class Joint:
             id1 = NULL
         else:
             id1 = body1.bid
-            
+
         if body2 == None:
             id2 = NULL
         else:
@@ -1911,7 +1911,7 @@ cdef class Joint:
         @param index: Bodx index (0 or 1).
         @type index: int
         """
-        
+
         if index == 0:
             return self.body1
         elif index == 1:
@@ -1931,7 +1931,7 @@ cdef class Joint:
         @param flag: Specifies whether a buffer should be created or released
         @type flag: bool
         """
-        
+
         if flag:
             # Was there already a buffer allocated? then we're finished
             if self.feedback != NULL:
@@ -1947,7 +1947,7 @@ cdef class Joint:
                 dJointSetFeedback(self.jid, NULL)
                 free(self.feedback)
                 self.feedback = NULL
-        
+
     # getFeedback
     def getFeedback(self):
         """getFeedback() -> (force1, torque1, force2, torque2)
@@ -1961,11 +1961,11 @@ cdef class Joint:
         If feedback is deactivated then the method always returns None.
         """
         cdef dJointFeedback* fb
-        
+
         fb = dJointGetFeedback(self.jid)
         if fb == NULL:
             return None
-           
+
         f1 = (fb.f1[0], fb.f1[1], fb.f1[2])
         t1 = (fb.t1[0], fb.t1[1], fb.t1[2])
         f2 = (fb.f2[0], fb.f2[1], fb.f2[2])
@@ -1980,7 +1980,7 @@ cdef class BallJoint(Joint):
     """Ball joint.
 
     Constructor::
-    
+
       BallJoint(world, jointgroup=None)
     """
 
@@ -1998,7 +1998,7 @@ cdef class BallJoint(Joint):
         self.world = world
         if jointgroup != None:
             jointgroup._addjoint(self)
-            
+
     # setAnchor
     def setAnchor(self, pos):
         """setAnchor(pos)
@@ -2010,7 +2010,7 @@ cdef class BallJoint(Joint):
         @type pos: 3-sequence of floats
         """
         dJointSetBallAnchor(self.jid, pos[0], pos[1], pos[2])
-    
+
     # getAnchor
     def getAnchor(self):
         """getAnchor() -> 3-tuple of floats
@@ -2019,7 +2019,7 @@ cdef class BallJoint(Joint):
         returns the point on body 1.  If the joint is perfectly
         satisfied, this will be the same as the point on body 2.
         """
-        
+
         cdef dVector3 p
         dJointGetBallAnchor(self.jid, p)
         return p[0], p[1], p[2]
@@ -2044,27 +2044,27 @@ cdef class BallJoint(Joint):
     # getParam
     def getParam(self, param):
         return 0.0
-        
-    
+
+
 # HingeJoint
 cdef class HingeJoint(Joint):
     """Hinge joint.
 
     Constructor::
-    
+
       HingeJoint(world, jointgroup=None)
     """
 
     def __cinit__(self, World world not None, jointgroup=None):
         cdef JointGroup jg
         cdef dJointGroupID jgid
-        
+
         jgid = NULL
         if jointgroup != None:
             jg = jointgroup
             jgid = jg.gid
         self.jid = dJointCreateHinge(world.wid, jgid)
-        
+
     def __init__(self, World world not None, jointgroup=None):
         self.world = world
         if jointgroup != None:
@@ -2080,7 +2080,7 @@ cdef class HingeJoint(Joint):
         @type pos: 3-sequence of floats
         """
         dJointSetHingeAnchor(self.jid, pos[0], pos[1], pos[2])
-    
+
     # getAnchor
     def getAnchor(self):
         """getAnchor() -> 3-tuple of floats
@@ -2115,7 +2115,7 @@ cdef class HingeJoint(Joint):
         @type axis: 3-sequence of floats
         """
         dJointSetHingeAxis(self.jid, axis[0], axis[1], axis[2])
-    
+
     # getAxis
     def getAxis(self):
         """getAxis() -> 3-tuple of floats
@@ -2138,7 +2138,7 @@ cdef class HingeJoint(Joint):
         the attached bodies is examined and that position will be the
         zero angle.
         """
-        
+
         return dJointGetHingeAngle(self.jid)
 
     # getAngleRate
@@ -2178,7 +2178,7 @@ cdef class HingeJoint(Joint):
         @type param: int
         @type value: float
         """
-        
+
         dJointSetHingeParam(self.jid, param, value)
 
     # getParam
@@ -2198,14 +2198,14 @@ cdef class HingeJoint(Joint):
         @type param: int
         """
         return dJointGetHingeParam(self.jid, param)
-        
-        
+
+
 # SliderJoint
 cdef class SliderJoint(Joint):
     """Slider joint.
-    
+
     Constructor::
-    
+
       SlideJoint(world, jointgroup=None)
     """
 
@@ -2223,7 +2223,7 @@ cdef class SliderJoint(Joint):
         self.world = world
         if jointgroup != None:
             jointgroup._addjoint(self)
-          
+
     # setAxis
     def setAxis(self, axis):
         """setAxis(axis)
@@ -2234,7 +2234,7 @@ cdef class SliderJoint(Joint):
         @type axis: 3-sequence of floats
         """
         dJointSetSliderAxis(self.jid, axis[0], axis[1], axis[2])
-    
+
     # getAxis
     def getAxis(self):
         """getAxis() -> 3-tuple of floats
@@ -2255,7 +2255,7 @@ cdef class SliderJoint(Joint):
         bodies is examined and that position will be the zero
         position.
         """
-        
+
         return dJointGetSliderPosition(self.jid)
 
     # getPositionRate
@@ -2284,14 +2284,14 @@ cdef class SliderJoint(Joint):
     # getParam
     def getParam(self, param):
         return dJointGetSliderParam(self.jid, param)
-        
-    
+
+
 # UniversalJoint
 cdef class UniversalJoint(Joint):
     """Universal joint.
 
     Constructor::
-    
+
       UniversalJoint(world, jointgroup=None)
     """
 
@@ -2320,7 +2320,7 @@ cdef class UniversalJoint(Joint):
         @type pos: 3-sequence of floats
         """
         dJointSetUniversalAnchor(self.jid, pos[0], pos[1], pos[2])
-    
+
     # getAnchor
     def getAnchor(self):
         """getAnchor() -> 3-tuple of floats
@@ -2329,7 +2329,7 @@ cdef class UniversalJoint(Joint):
         the point on body 1. If the joint is perfectly satisfied, this
         will be the same as the point on body 2.
         """
-        
+
         cdef dVector3 p
         dJointGetUniversalAnchor(self.jid, p)
         return p[0], p[1], p[2]
@@ -2342,7 +2342,7 @@ cdef class UniversalJoint(Joint):
         the point on body 2. If the joint is perfectly satisfied, this
         will be the same as the point on body 1.
         """
-        
+
         cdef dVector3 p
         dJointGetUniversalAnchor2(self.jid, p)
         return p[0], p[1], p[2]
@@ -2358,7 +2358,7 @@ cdef class UniversalJoint(Joint):
         @type axis: 3-sequence of floats
         """
         dJointSetUniversalAxis1(self.jid, axis[0], axis[1], axis[2])
-    
+
     # getAxis1
     def getAxis1(self):
         """getAxis1() -> 3-tuple of floats
@@ -2380,7 +2380,7 @@ cdef class UniversalJoint(Joint):
         @type axis: 3-sequence of floats
         """
         dJointSetUniversalAxis2(self.jid, axis[0], axis[1], axis[2])
-    
+
     # getAxis2
     def getAxis2(self):
         """getAxis2() -> 3-tuple of floats
@@ -2409,7 +2409,7 @@ cdef class UniversalJoint(Joint):
 
     def getAngle2(self):
         return dJointGetUniversalAngle2(self.jid)
-    
+
     def getAngle1Rate(self):
         return dJointGetUniversalAngle1Rate(self.jid)
 
@@ -2424,13 +2424,13 @@ cdef class UniversalJoint(Joint):
     def getParam(self, param):
         return dJointGetUniversalParam(self.jid, param)
 
-    
+
 # Hinge2Joint
 cdef class Hinge2Joint(Joint):
     """Hinge2 joint.
 
     Constructor::
-    
+
       Hinge2Joint(world, jointgroup=None)
     """
 
@@ -2459,7 +2459,7 @@ cdef class Hinge2Joint(Joint):
         @type pos: 3-sequence of floats
         """
         dJointSetHinge2Anchor(self.jid, pos[0], pos[1], pos[2])
-    
+
     # getAnchor
     def getAnchor(self):
         """getAnchor() -> 3-tuple of floats
@@ -2468,7 +2468,7 @@ cdef class Hinge2Joint(Joint):
         the point on body 1. If the joint is perfectly satisfied, this
         will be the same as the point on body 2.
         """
-        
+
         cdef dVector3 p
         dJointGetHinge2Anchor(self.jid, p)
         return p[0], p[1], p[2]
@@ -2481,7 +2481,7 @@ cdef class Hinge2Joint(Joint):
         the point on body 2. If the joint is perfectly satisfied, this
         will be the same as the point on body 1.
         """
-        
+
         cdef dVector3 p
         dJointGetHinge2Anchor2(self.jid, p)
         return p[0], p[1], p[2]
@@ -2496,9 +2496,9 @@ cdef class Hinge2Joint(Joint):
         @param axis: Joint axis
         @type axis: 3-sequence of floats
         """
-        
+
         dJointSetHinge2Axis1(self.jid, axis[0], axis[1], axis[2])
-    
+
     # getAxis1
     def getAxis1(self):
         """getAxis1() -> 3-tuple of floats
@@ -2520,7 +2520,7 @@ cdef class Hinge2Joint(Joint):
         @type axis: 3-sequence of floats
         """
         dJointSetHinge2Axis2(self.jid, axis[0], axis[1], axis[2])
-    
+
     # getAxis2
     def getAxis2(self):
         """getAxis2() -> 3-tuple of floats
@@ -2580,13 +2580,13 @@ cdef class Hinge2Joint(Joint):
     def getParam(self, param):
         return dJointGetHinge2Param(self.jid, param)
 
-    
+
 # FixedJoint
 cdef class FixedJoint(Joint):
     """Fixed joint.
 
     Constructor::
-    
+
       FixedJoint(world, jointgroup=None)
     """
 
@@ -2615,13 +2615,13 @@ cdef class FixedJoint(Joint):
         """
         dJointSetFixed(self.jid)
 
-        
+
 # ContactJoint
 cdef class ContactJoint(Joint):
     """Contact joint.
 
     Constructor::
-    
+
       ContactJoint(world, jointgroup, contact)
     """
 
@@ -2642,9 +2642,9 @@ cdef class ContactJoint(Joint):
 # AMotor
 cdef class AMotor(Joint):
     """AMotor joint.
-    
+
     Constructor::
-    
+
       AMotor(world, jointgroup=None)
     """
 
@@ -2662,7 +2662,7 @@ cdef class AMotor(Joint):
         self.world = world
         if jointgroup != None:
             jointgroup._addjoint(self)
-            
+
     # setMode
     def setMode(self, mode):
         """setMode(mode)
@@ -2712,7 +2712,7 @@ cdef class AMotor(Joint):
         The anum argument selects the axis to change (0,1 or 2).
         Each axis can have one of three "relative orientation" modes,
         selected by rel:
-        
+
         0: The axis is anchored to the global frame.
         1: The axis is anchored to the first body.
         2: The axis is anchored to the second body.
@@ -2815,9 +2815,9 @@ cdef class AMotor(Joint):
 # LMotor
 cdef class LMotor(Joint):
     """LMotor joint.
-    
+
     Constructor::
-    
+
       LMotor(world, jointgroup=None)
     """
 
@@ -2835,7 +2835,7 @@ cdef class LMotor(Joint):
         self.world = world
         if jointgroup != None:
             jointgroup._addjoint(self)
-            
+
     # setNumAxes
     def setNumAxes(self, int num):
         """setNumAxes(num)
@@ -2906,7 +2906,7 @@ cdef class Plane2DJoint(Joint):
     """Plane-2D Joint.
 
     Constructor::
-    
+
       Plane2DJoint(world, jointgroup=None)
     """
 
@@ -2924,13 +2924,13 @@ cdef class Plane2DJoint(Joint):
         self.world = world
         if jointgroup != None:
             jointgroup._addjoint(self)
-            
+
     def setXParam(self, param, value):
         dJointSetPlane2DXParam(self.jid, param, value)
-        
+
     def setYParam(self, param, value):
         dJointSetPlane2DYParam(self.jid, param, value)
-        
+
     def setAngleParam(self, param, value):
         dJointSetPlane2DAngleParam(self.jid, param, value)
 
@@ -3028,7 +3028,7 @@ cdef class PRJoint(Joint):
 cdef class GeomObject:
     """This is the abstract base class for all geom objects.
     """
-    
+
     # The id of the geom object as returned by dCreateXxxx()
     cdef dGeomID gid
     # The space in which the geom was placed (or None). This reference
@@ -3104,7 +3104,7 @@ cdef class GeomObject:
         if not self.placeable():
             raise ValueError(
                 "Non-placeable geoms cannot have a body associated to them")
-        
+
         if body == None:
             dGeomSetBody(self.gid, NULL)
         else:
@@ -3118,7 +3118,7 @@ cdef class GeomObject:
         """
         if not self.placeable():
             return environment
-        
+
         return self.body
 
     def setPosition(self, pos):
@@ -3297,7 +3297,7 @@ cdef class GeomObject:
         The return value is a 6-tuple (minx, maxx, miny, maxy, minz, maxz).
         """
         cdef dReal aabb[6]
-        
+
         dGeomGetAABB(self.gid, aabb)
         return aabb[0], aabb[1], aabb[2], aabb[3], aabb[4], aabb[5]
 
@@ -3323,7 +3323,7 @@ cdef class GeomObject:
         @type bits: int/long
         """
         dGeomSetCollideBits(self.gid, long(bits))
-        
+
     def setCategoryBits(self, bits):
         """setCategoryBits(bits)
 
@@ -3347,7 +3347,7 @@ cdef class GeomObject:
         Return the "category" bitfields for this geom.
         """
         return dGeomGetCategoryBits(self.gid)
-    
+
     def enable(self):
         """enable()
 
@@ -3375,7 +3375,7 @@ class _SpaceIterator:
     def __init__(self, space):
         self.space = space
         self.idx = 0
-        
+
     def __iter__(self):
         return self
 
@@ -3409,7 +3409,7 @@ cdef class SpaceBase(GeomObject):
     # (as the Space is derived from GeomObject) which can be used without
     # casting whenever a *space* id is required.
     cdef dSpaceID sid
-    
+
     # Dictionary with Geomobjects. Key is the ID (geom._id()) and the value
     # is the geom object (Python wrapper). This is used in collide_callback()
 #    cdef object geom_dict
@@ -3443,10 +3443,10 @@ cdef class SpaceBase(GeomObject):
 #            return self.geom_dict[id]
 #        else:
 #            return None
-       
+
     def _id(self):
-        cdef long id
-        id = <long>self.sid
+        cdef long long id
+        id = <long long>self.sid
         return id
 
     def __len__(self):
@@ -3464,7 +3464,7 @@ cdef class SpaceBase(GeomObject):
         @param geom: Geom object to add
         @type geom: GeomObject
         """
-        
+
         dSpaceAdd(self.sid, geom.gid)
 
     def remove(self, GeomObject geom):
@@ -3509,11 +3509,11 @@ cdef class SpaceBase(GeomObject):
             raise IndexError("geom index out of range")
 
         gid = dSpaceGetGeom(self.sid, idx)
-        if <long>gid not in _geom_c2py_lut:
+        if <long long>gid not in _geom_c2py_lut:
             raise RuntimeError(
                 "geom id cannot be translated to a Python object")
 
-        return _geom_c2py_lut[<long>gid]
+        return _geom_c2py_lut[<long long>gid]
 
     def collide(self, arg, callback):
         """collide(arg, callback)
@@ -3535,7 +3535,7 @@ cdef class SpaceBase(GeomObject):
         @param callback: Callback function
         @type callback: callable
         """
-        
+
         cdef void* data
         cdef object tup
         tup = (callback, arg)
@@ -3551,15 +3551,15 @@ cdef class SpaceBase(GeomObject):
 cdef void collide_callback(void* data, dGeomID o1, dGeomID o2):
     cdef object tup
 #    cdef Space space
-    cdef long id1, id2
+    cdef long long id1, id2
 
 #    if (dGeomGetBody(o1)==dGeomGetBody(o2)):
 #        return
-    
+
     tup = <object>data
     callback, arg = tup
-    id1 = <long>o1
-    id2 = <long>o2
+    id1 = <long long>o1
+    id2 = <long long>o2
     g1 = _geom_c2py_lut[id1]
     g2 = _geom_c2py_lut[id2]
     callback(arg, g1, g2)
@@ -3586,14 +3586,14 @@ cdef class SimpleSpace(SpaceBase):
         if space != None:
             sp = space
             parentid = sp.sid
-        
+
         self.sid = dSimpleSpaceCreate(parentid)
 
         # Copy the ID
         self.gid = <dGeomID>self.sid
 
         dSpaceSetCleanup(self.sid, 0)
-        _geom_c2py_lut[<long>self.sid] = self
+        _geom_c2py_lut[<long long>self.sid] = self
 
     def __init__(self, space=None):
         pass
@@ -3619,18 +3619,18 @@ cdef class HashSpace(SpaceBase):
         if space != None:
             sp = space
             parentid = sp.sid
-        
+
         self.sid = dHashSpaceCreate(parentid)
 
         # Copy the ID
         self.gid = <dGeomID>self.sid
 
         dSpaceSetCleanup(self.sid, 0)
-        _geom_c2py_lut[<long>self.sid] = self
+        _geom_c2py_lut[<long long>self.sid] = self
 
     def __init__(self, space=None):
         pass
-    
+
     def setLevels(self, int minlevel, int maxlevel):
         """setLevels(minlevel, maxlevel)
 
@@ -3638,12 +3638,12 @@ cdef class HashSpace(SpaceBase):
         hash table. The actual size will be 2^minlevel and 2^maxlevel
         respectively.
         """
-        
+
         if minlevel > maxlevel:
             raise ValueError(
                 "minlevel (%d) must be less than or equal to maxlevel (%d)" %
                 (minlevel, maxlevel))
-            
+
         dHashSpaceSetLevels(self.sid, minlevel, maxlevel)
 
     def getLevels(self):
@@ -3653,7 +3653,7 @@ cdef class HashSpace(SpaceBase):
         hash table. The actual size is 2^minlevel and 2^maxlevel
         respectively.
         """
-        
+
         cdef int minlevel
         cdef int maxlevel
         dHashSpaceGetLevels(self.sid, &minlevel, &maxlevel)
@@ -3695,7 +3695,7 @@ cdef class QuadTreeSpace(SpaceBase):
         self.gid = <dGeomID>self.sid
 
         dSpaceSetCleanup(self.sid, 0)
-        _geom_c2py_lut[<long>self.sid] = self
+        _geom_c2py_lut[<long long>self.sid] = self
 
     def __init__(self, center, extents, depth, space=None):
         pass
@@ -3709,7 +3709,7 @@ def Space(space_type=0):
 
     This function is provided to remain compatible with previous
     versions of PyODE where there was only one Space class.
-    
+
      >>> space = Space(space_type=0)   # Create a SimpleSpace
      >>> space = Space(space_type=1)   # Create a HashSpace
     """
@@ -3728,7 +3728,7 @@ cdef class GeomSphere(GeomObject):
     This class represents a sphere centered at the origin.
 
     Constructor::
-    
+
       GeomSphere(space=None, radius=1.0)
     """
 
@@ -3744,7 +3744,7 @@ cdef class GeomSphere(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None, radius=1.0):
         self.space = space
@@ -3754,8 +3754,8 @@ cdef class GeomSphere(GeomObject):
         return True
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def setRadius(self, radius):
@@ -3788,7 +3788,7 @@ cdef class GeomSphere(GeomObject):
         """
         return dGeomSpherePointDepth(self.gid, p[0], p[1], p[2])
 
-                
+
 # GeomBox
 cdef class GeomBox(GeomObject):
     """Box geometry.
@@ -3796,14 +3796,14 @@ cdef class GeomBox(GeomObject):
     This class represents a box centered at the origin.
 
     Constructor::
-    
+
       GeomBox(space=None, lengths=(1.0, 1.0, 1.0))
     """
 
     def __cinit__(self, space=None, lengths=(1.0, 1.0, 1.0)):
         cdef SpaceBase sp
         cdef dSpaceID sid
-        
+
         sid = NULL
         if space != None:
             sp = space
@@ -3812,7 +3812,7 @@ cdef class GeomBox(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None, lengths=(1.0, 1.0, 1.0)):
         self.space = space
@@ -3822,8 +3822,8 @@ cdef class GeomBox(GeomObject):
         return True
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def setLengths(self, lengths):
@@ -3859,7 +3859,7 @@ cdef class GeomPlane(GeomObject):
     If you call getBody() on this object it always returns ode.environment.
 
     Constructor::
-    
+
       GeomPlane(space=None, normal=(0,0,1), dist=0)
 
     """
@@ -3867,7 +3867,7 @@ cdef class GeomPlane(GeomObject):
     def __cinit__(self, space=None, normal=(0, 0, 1), dist=0):
         cdef SpaceBase sp
         cdef dSpaceID sid
-        
+
         sid = NULL
         if space != None:
             sp = space
@@ -3876,14 +3876,14 @@ cdef class GeomPlane(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None, normal=(0, 0, 1), dist=0):
         self.space = space
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def setParams(self, normal, dist):
@@ -3916,7 +3916,7 @@ cdef class GeomCapsule(GeomObject):
     and centered at the origin.
 
     Constructor::
-    
+
       GeomCapsule(space=None, radius=0.5, length=1.0)
 
     The length parameter does not include the caps.
@@ -3925,7 +3925,7 @@ cdef class GeomCapsule(GeomObject):
     def __cinit__(self, space=None, radius=0.5, length=1.0):
         cdef SpaceBase sp
         cdef dSpaceID sid
-        
+
         sid = NULL
         if space != None:
             sp = space
@@ -3934,7 +3934,7 @@ cdef class GeomCapsule(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None, radius=0.5, length=1.0):
         self.space = space
@@ -3944,8 +3944,8 @@ cdef class GeomCapsule(GeomObject):
         return True
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def setParams(self, radius, length):
@@ -3980,14 +3980,14 @@ cdef class GeomCylinder(GeomObject):
     and centered at the origin.
 
     Constructor::
-    
+
       GeomCylinder(space=None, radius=0.5, length=1.0)
     """
 
     def __cinit__(self, space=None, radius=0.5, length=1.0):
         cdef SpaceBase sp
         cdef dSpaceID sid
-        
+
         sid = NULL
         if space != None:
             sp = space
@@ -3996,7 +3996,7 @@ cdef class GeomCylinder(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None, radius=0.5, length=1.0):
         self.space = space
@@ -4006,8 +4006,8 @@ cdef class GeomCylinder(GeomObject):
         return True
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def setParams(self, radius, length):
@@ -4031,15 +4031,15 @@ cdef class GeomRay(GeomObject):
     the geom's local Z-axis.
 
     Constructor::
-    
+
       GeomRay(space=None, rlen=1.0)
-    
+
     """
 
     def __cinit__(self, space=None, rlen=1.0):
         cdef SpaceBase sp
         cdef dSpaceID sid
-        
+
         sid = NULL
         if space != None:
             sp = space
@@ -4048,15 +4048,15 @@ cdef class GeomRay(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None, rlen=1.0):
         self.space = space
         self.body = None
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def placeable(self):
@@ -4083,7 +4083,7 @@ cdef class GeomRay(GeomObject):
         '''set(p, u)
 
         Set the position and rotation of a ray.
-        
+
         @param p: position
         @type p: 3-sequence of floats
         @param u: rotation
@@ -4112,7 +4112,7 @@ cdef class GeomTransform(GeomObject):
     respect to its point of reference.
 
     Constructor::
-    
+
       GeomTransform(space=None)
     """
 
@@ -4121,7 +4121,7 @@ cdef class GeomTransform(GeomObject):
     def __cinit__(self, space=None):
         cdef SpaceBase sp
         cdef dSpaceID sid
-        
+
         sid = NULL
         if space != None:
             sp = space
@@ -4133,7 +4133,7 @@ cdef class GeomTransform(GeomObject):
 #        if space != None:
 #            space._addgeom(self)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, space=None):
         self.space = space
@@ -4146,8 +4146,8 @@ cdef class GeomTransform(GeomObject):
         return True
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def setGeom(self, GeomObject geom not None):
@@ -4161,7 +4161,7 @@ cdef class GeomTransform(GeomObject):
         @param geom: Geom object to encapsulate
         @type geom: GeomObject
         """
-        cdef long id
+        cdef long long id
 
         if not geom.placeable():
             raise ValueError(
@@ -4172,7 +4172,7 @@ cdef class GeomTransform(GeomObject):
         if dGeomGetBody(geom.gid) != <dBodyID>0:
             raise ValueError(
                 "The encapsulated geom is already associated with a body")
-        
+
         id = geom._id()
         dGeomTransformSetGeom(self.gid, <dGeomID>id)
         self.geom = geom
@@ -4241,7 +4241,7 @@ cdef class TriMeshData:
             free(self.vertex_buffer)
         if self.face_buffer != NULL:
             free(self.face_buffer)
-    
+
     def build(self, verts, faces):
         """build(verts, faces)
 
@@ -4255,7 +4255,7 @@ cdef class TriMeshData:
         cdef dReal* vp
         cdef int* fp
         cdef int a, b, c
-        
+
         numverts = len(verts)
         numfaces = len(faces)
         # Allocate the vertex and face buffer
@@ -4300,7 +4300,7 @@ cdef class GeomTriMesh(GeomObject):
     argument to the constructor.
 
     Constructor::
-    
+
       GeomTriMesh(data, space=None)
     """
 
@@ -4319,7 +4319,7 @@ cdef class GeomTriMesh(GeomObject):
             sid = sp.sid
         self.gid = dCreateTriMesh(sid, data.tmdid, NULL, NULL, NULL)
 
-        _geom_c2py_lut[<long>self.gid] = self
+        _geom_c2py_lut[<long long>self.gid] = self
 
     def __init__(self, TriMeshData data not None, space=None):
         self.space = space
@@ -4329,8 +4329,8 @@ cdef class GeomTriMesh(GeomObject):
         return True
 
     def _id(self):
-        cdef long id
-        id = <long>self.gid
+        cdef long long id
+        id = <long long>self.gid
         return id
 
     def clearTCCache(self):
@@ -4360,7 +4360,7 @@ cdef class GeomTriMesh(GeomObject):
         return ((v0[0], v0[1], v0[2]),
                 (v1[0], v1[1], v1[2]),
                 (v2[0], v2[1], v2[2]))
-        
+
     def getTriangleCount(self):
         """getTriangleCount() -> n
 
@@ -4397,10 +4397,10 @@ def collide(geom1, geom2):
     @type geom2: GeomObject
     @returns: Returns a list of Contact objects.
     """
-    
+
     cdef dContactGeom c[150]
-    cdef long id1
-    cdef long id2
+    cdef long long id1
+    cdef long long id2
     cdef int i, n
     cdef Contact cont
 
@@ -4421,7 +4421,7 @@ def collide(geom1, geom2):
 
 def collide2(geom1, geom2, arg, callback):
     """collide2(geom1, geom2, arg, callback)
-    
+
     Calls the callback for all potentially intersecting pairs that contain
     one geom from geom1 and one geom from geom2.
 
@@ -4435,12 +4435,12 @@ def collide2(geom1, geom2, arg, callback):
     """
     cdef void* data
     cdef object tup
-    cdef long id1
-    cdef long id2
+    cdef long long id1
+    cdef long long id2
 
     id1 = geom1._id()
     id2 = geom2._id()
-    
+
     tup = (callback, arg)
     data = <void*>tup
     # collide_callback is defined in space.pyx
